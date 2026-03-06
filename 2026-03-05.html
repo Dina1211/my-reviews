@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>周四复盘 · 2026.3.5</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&family=Space+Mono:wght@400;700&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --paper: #f7f4ef;
+    --warm: #e8e0d5;
+    --accent: #c84b31;
+    --gold: #c9974c;
+    --sage: #5a7a6a;
+    --muted: #8a8070;
+    --highlight: #f0e6d3;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 48px 24px 80px;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .header {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 20px;
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .date-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+  }
+
+  .subtitle-hero {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 1.5px;
+    text-align: right;
+  }
+
+  /* Section */
+  .section {
+    margin-bottom: 40px;
+  }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--warm);
+  }
+
+  /* Tomorrow's subtitle */
+  .tomorrow-card {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 4px;
+    padding: 28px 32px;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tomorrow-card::before {
+    content: '明日';
+    position: absolute;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Noto Serif SC', serif;
+    font-size: 80px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.05);
+    line-height: 1;
+  }
+
+  .tomorrow-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+
+  .tomorrow-subtitle {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.5;
+    margin-bottom: 14px;
+  }
+
+  .tomorrow-sub {
+    font-size: 13px;
+    color: rgba(247,244,239,0.6);
+    line-height: 1.7;
+  }
+
+  /* Table */
+  .action-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .action-table th {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 2px solid var(--warm);
+    font-weight: 400;
+  }
+
+  .action-table td {
+    padding: 12px 12px;
+    font-size: 14px;
+    line-height: 1.6;
+    border-bottom: 1px solid var(--warm);
+    vertical-align: top;
+  }
+
+  .action-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .action-table tr:hover td {
+    background: var(--highlight);
+  }
+
+  .tag {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 2px 7px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .tag-env { background: #d4e8df; color: var(--sage); }
+  .tag-habit { background: #e8dfd4; color: #7a5a3a; }
+  .tag-planning { background: #d4dce8; color: #3a5a7a; }
+  .tag-exec { background: #e8d4d4; color: #7a3a3a; }
+
+  /* Polish section */
+  .polish-item {
+    padding: 18px 0;
+    border-bottom: 1px solid var(--warm);
+  }
+
+  .polish-item:last-child { border-bottom: none; }
+
+  .polish-before {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    display: flex;
+    gap: 10px;
+  }
+
+  .polish-before-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: var(--muted);
+    padding: 2px 6px;
+    border: 1px solid var(--warm);
+    border-radius: 2px;
+    white-space: nowrap;
+    height: fit-content;
+    margin-top: 1px;
+  }
+
+  .polish-after {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--ink);
+    display: flex;
+    gap: 10px;
+  }
+
+  .polish-after-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: var(--accent);
+    padding: 2px 6px;
+    border: 1px solid var(--accent);
+    border-radius: 2px;
+    white-space: nowrap;
+    height: fit-content;
+    margin-top: 2px;
+  }
+
+  /* Wins */
+  .win-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--warm);
+  }
+  .win-row:last-child { border-bottom: none; }
+
+  .win-check {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--sage);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .win-text {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .win-note {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid var(--warm);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-note {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  .energy-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 4px 10px;
+    border-radius: 2px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <div class="date-label">2026 · 03 · 05 &nbsp;|&nbsp; 周四</div>
+      <div class="title">每日复盘</div>
+    </div>
+    <div class="subtitle-hero">DAY REVIEW</div>
+  </div>
+
+  <!-- Tomorrow's Subtitle -->
+  <div class="tomorrow-card">
+    <div class="tomorrow-label">TOMORROW'S THEME · 明日主题</div>
+    <div class="tomorrow-subtitle">「用纵深换广度——<br>业务面写透，学习向前推」</div>
+    <div class="tomorrow-sub">
+      今天投递节奏和产品简历都到位了，明天把重心收回到业务面和 stat107 作业上，<br>
+      用同样的"出门 + 番茄"节奏，把剩余 7 个业务问题写完。
+    </div>
+  </div>
+
+  <!-- Wins -->
+  <div class="section">
+    <div class="section-label">今日完成</div>
+    <div class="win-row">
+      <div class="win-check">✓</div>
+      <div>
+        <div class="win-text">业务面投入完成 5 个问题（超过保守目标 4 个）</div>
+        <div class="win-note">截止条件达成，60% → 100%</div>
+      </div>
+    </div>
+    <div class="win-row">
+      <div class="win-check">✓</div>
+      <div>
+        <div class="win-text">晚上投递大公司 5 个，共约 1h 10mins</div>
+        <div class="win-note">每家约 15mins，节奏稳定</div>
+      </div>
+    </div>
+    <div class="win-row">
+      <div class="win-check">✓</div>
+      <div>
+        <div class="win-text">改产品简历 + 改个人优势（新增项，全部完成）</div>
+      </div>
+    </div>
+    <div class="win-row">
+      <div class="win-check">✓</div>
+      <div>
+        <div class="win-text">早上 shadow reading 充能 30 分钟</div>
+      </div>
+    </div>
+    <div class="win-row">
+      <div class="win-check">—</div>
+      <div>
+        <div class="win-text" style="color:var(--muted)">行为面 2 个修改 → 仅完成 1 个（被简历任务冲掉）</div>
+        <div class="win-note">未完成项，已纳入明日计划</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Effective Actions Table -->
+  <div class="section">
+    <div class="section-label">有效行动 · 可复用策略</div>
+    <table class="action-table">
+      <thead>
+        <tr>
+          <th style="width:90px">类别</th>
+          <th>行动</th>
+          <th style="width:120px">为什么有效</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="tag tag-env">环境触发</span></td>
+          <td>出门，换到外部环境（咖啡馆/图书馆）工作</td>
+          <td style="font-size:13px;color:var(--muted)">减少家中干扰，用空间切换触发专注状态</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-habit">晨间充能</span></td>
+          <td>早上 30 分钟 shadow reading（做喜欢的事）</td>
+          <td style="font-size:13px;color:var(--muted)">给自己充能，而非一开始就进入高压任务</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-planning">少即是多</span></td>
+          <td>只写 1-3 件最重要的事，不堆砌清单</td>
+          <td style="font-size:13px;color:var(--muted)">负担感低，容易启动，执行率高</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-exec">番茄工作法</span></td>
+          <td>用番茄钟启动第二项任务，完成第一个再切换</td>
+          <td style="font-size:13px;color:var(--muted)">避免任务间的"启动摩擦"，保持动能连续</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-exec">固定时间投递</span></td>
+          <td>晚 9PM 开始投递，设定固定窗口（≈1-2h）</td>
+          <td style="font-size:13px;color:var(--muted)">用时间规定替代数量规定，压力更小更可持续</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-planning">截止条件</span></td>
+          <td>为核心任务设置明确的"完成定义"（几个问题）</td>
+          <td style="font-size:13px;color:var(--muted)">知道何时算"做完"，避免无休止打磨</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Polish Section -->
+  <div class="section">
+    <div class="section-label">表达打磨 · 更清晰的认知</div>
+
+    <div class="polish-item">
+      <div class="polish-before">
+        <span class="polish-before-label">原话</span>
+        行业不确定；投递时间可以每天 2h 就好
+      </div>
+      <div class="polish-after">
+        <span class="polish-after-label">精炼</span>
+        投递策略调整：不以公司数量为目标，改为每日固定 1-2h 投递窗口。行业方向仍需探索，但节奏先稳住。
+      </div>
+    </div>
+
+    <div class="polish-item">
+      <div class="polish-before">
+        <span class="polish-before-label">原话</span>
+        感觉自己好差，就什么都不知道，gtm 也才知道皮毛
+      </div>
+      <div class="polish-after">
+        <span class="polish-after-label">精炼</span>
+        正处于"学习陡坡期"——业务感还在积累中，感到吃力是正常的。今天实际投入了 7h，已经在做对的事。不足的是业务面的"sense"还不够深，这是可以通过积累改变的。
+      </div>
+    </div>
+
+    <div class="polish-item">
+      <div class="polish-before">
+        <span class="polish-before-label">原话</span>
+        行为面被产品简历和个人优势冲掉了，没写完
+      </div>
+      <div class="polish-after">
+        <span class="polish-after-label">精炼</span>
+        今天临时加入了"改简历"这一高优先级任务，与原计划产生冲突。下次遇到临时插入任务时，先判断它是否值得替换今日计划，而不是默默并行，导致两头都做不完。
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-note">精力 PEAK TIME · 下午</div>
+    <div class="energy-badge">7H DEEP WORK · TODAY</div>
+  </div>
+
+</div>
+</body>
+</html>
