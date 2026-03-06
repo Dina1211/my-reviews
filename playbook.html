@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>策略库 · My Playbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&family=Space+Mono:wght@400;700&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --paper: #f7f4ef;
+    --warm: #e8e0d5;
+    --accent: #c84b31;
+    --gold: #c9974c;
+    --sage: #5a7a6a;
+    --muted: #8a8070;
+    --highlight: #f0e6d3;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 48px 24px 80px;
+  }
+
+  .container { max-width: 720px; margin: 0 auto; }
+
+  .header {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 20px;
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .date-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+
+  .title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 28px;
+    font-weight: 600;
+  }
+
+  .subtitle-hero {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 1.5px;
+    text-align: right;
+  }
+
+  /* Stats */
+  .stats-row {
+    display: flex;
+    gap: 1px;
+    background: var(--warm);
+    border: 1px solid var(--warm);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 40px;
+  }
+
+  .stat-item {
+    flex: 1;
+    background: var(--paper);
+    padding: 16px 20px;
+    text-align: center;
+  }
+
+  .stat-number {
+    font-family: 'Space Mono', monospace;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 5px;
+  }
+
+  .stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* Section label */
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--warm);
+  }
+
+  /* Category filter */
+  .filter-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+
+  .filter-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 5px 12px;
+    border-radius: 2px;
+    border: 1px solid var(--warm);
+    background: var(--paper);
+    color: var(--muted);
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.15s;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  /* Strategy card */
+  .strategy-card {
+    border: 1px solid var(--warm);
+    border-radius: 4px;
+    padding: 20px 22px;
+    margin-bottom: 12px;
+    transition: all 0.15s;
+    position: relative;
+  }
+
+  .strategy-card:hover {
+    border-color: var(--muted);
+    background: var(--highlight);
+  }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    gap: 12px;
+  }
+
+  .card-title {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.5;
+    flex: 1;
+  }
+
+  .card-streak {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gold);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .card-streak.hot { color: var(--accent); }
+
+  .card-why {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+
+  .card-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .card-meta {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 2px 7px;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+
+  .tag-env { background: #d4e8df; color: var(--sage); }
+  .tag-habit { background: #e8dfd4; color: #7a5a3a; }
+  .tag-planning { background: #d4dce8; color: #3a5a7a; }
+  .tag-exec { background: #e8d4d4; color: #7a3a3a; }
+  .tag-mindset { background: #e8d4e8; color: #6a3a7a; }
+
+  .card-dates {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+  }
+
+  /* Strength bar */
+  .strength-bar {
+    margin-top: 10px;
+    height: 3px;
+    background: var(--warm);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .strength-fill {
+    height: 100%;
+    background: var(--sage);
+    border-radius: 2px;
+    transition: width 0.6s ease;
+  }
+
+  .strength-fill.strong { background: var(--gold); }
+  .strength-fill.core { background: var(--accent); }
+
+  /* Back link */
+  .back-link {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 32px;
+  }
+
+  .back-link:hover { color: var(--ink); }
+
+  .footer {
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid var(--warm);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .footer-note {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  /* How to update note */
+  .update-note {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 4px;
+    padding: 20px 24px;
+    margin-top: 40px;
+    font-size: 12px;
+    line-height: 1.8;
+    color: rgba(247,244,239,0.65);
+  }
+
+  .update-note strong {
+    color: var(--gold);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  code {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    background: rgba(255,255,255,0.1);
+    padding: 1px 5px;
+    border-radius: 2px;
+    color: var(--gold);
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <a class="back-link" href="index.html">← 返回复盘归档</a>
+
+  <div class="header">
+    <div>
+      <div class="date-label">STRATEGY PLAYBOOK · 策略库</div>
+      <div class="title">我的有效行动</div>
+    </div>
+    <div class="subtitle-hero">PLAYBOOK</div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-item">
+      <div class="stat-number">6</div>
+      <div class="stat-label">总策略数</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">1</div>
+      <div class="stat-label">累积天数</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">3</div>
+      <div class="stat-label">核心策略</div>
+    </div>
+  </div>
+
+  <!-- Filter -->
+  <div class="section-label">所有策略</div>
+  <div class="filter-row">
+    <button class="filter-btn active" onclick="filterCards('all', this)">全部</button>
+    <button class="filter-btn" onclick="filterCards('env', this)">环境触发</button>
+    <button class="filter-btn" onclick="filterCards('habit', this)">晨间习惯</button>
+    <button class="filter-btn" onclick="filterCards('planning', this)">规划方法</button>
+    <button class="filter-btn" onclick="filterCards('exec', this)">执行技巧</button>
+    <button class="filter-btn" onclick="filterCards('mindset', this)">心态调节</button>
+  </div>
+
+  <!-- Strategy Cards -->
+  <!-- 
+    每次新增策略：复制一个 strategy-card，填入内容
+    streak: 连续使用天数
+    strength: 0-100，用了几次就加20
+    dates: 使用日期列表
+  -->
+
+  <div class="strategy-card" data-category="env">
+    <div class="card-top">
+      <div class="card-title">出门，换到外部环境（咖啡馆/图书馆）工作</div>
+      <div class="card-streak hot">🔥 1天</div>
+    </div>
+    <div class="card-why">减少家中干扰，用空间切换触发专注状态。下午效果最显著。</div>
+    <div class="card-bottom">
+      <div class="card-meta">
+        <span class="tag tag-env">环境触发</span>
+      </div>
+      <div class="card-dates">首次 03/05</div>
+    </div>
+    <div class="strength-bar"><div class="strength-fill" style="width:20%"></div></div>
+  </div>
+
+  <div class="strategy-card" data-category="habit">
+    <div class="card-top">
+      <div class="card-title">早上 30 分钟 shadow reading（做喜欢的事充能）</div>
+      <div class="card-streak hot">🔥 1天</div>
+    </div>
+    <div class="card-why">给自己充能，而非一开始就进入高压任务。感觉很舒服，愿意继续。</div>
+    <div class="card-bottom">
+      <div class="card-meta">
+        <span class="tag tag-habit">晨间充能</span>
+      </div>
+      <div class="card-dates">首次 03/05</div>
+    </div>
+    <div class="strength-bar"><div class="strength-fill" style="width:20%"></div></div>
+  </div>
+
+  <div class="strategy-card" data-category="planning">
+    <div class="card-top">
+      <div class="card-title">只写 1-3 件最重要的事，不堆砌清单</div>
+      <div class="card-streak hot">🔥 1天</div>
+    </div>
+    <div class="card-why">负担感低，容易启动，执行率高。</div>
+    <div class="card-bottom">
+      <div class="card-meta">
+        <span class="tag tag-planning">少即是多</span>
+      </div>
+      <div class="card-dates">首次 03/05</div>
+    </div>
+    <div class="strength-bar"><div class="strength-fill" style="width:20%"></div></div>
+  </div>
+
+  <div class="strategy-card" data-category="exec">
+    <div class="card-top">
+      <div class="card-title">用番茄钟启动第二项任务，完成第一个再切换</div>
+      <div class="card-streak hot">🔥 1天</div>
+    </div>
+    <div class="card-why">避免任务间的"启动摩擦"，保持动能连续。</div>
+    <div class="card-bottom">
+      <div class="card-meta">
+        <span class="tag tag-exec">番茄工作法</span>
+      </div>
+      <div class="card-dates">首次 03/05</div>
+    </div>
+    <div class="strength-bar"><div class="strength-fill" style="width:20%"></div></div>
+  </div>
+
+  <div class="strategy-card" data-category="exec">
+    <div class="card-top">
+      <div class="card-title">晚 9PM 开始投递，设定固定时间窗口（≈1-2h）</div>
+      <div class="card-streak hot">🔥 1天</div>
+    </div>
+    <div class="card-why">用时间规定替代数量规定，压力更小更可持续。</div>
+    <div class="card-bottom">
+      <div class="card-meta">
+        <span class="tag tag-exec">固定时间投递</span>
+      </div>
+      <div class="card-dates">首次 03/05</div>
+    </div>
+    <div class="strength-bar"><div class="strength-fill" style="width:20%"></div></div>
+  </div>
+
+  <div class="strategy-card" data-category="planning">
+    <div class="card-top">
+      <div class="card-title">为核心任务设置明确的"完成定义"（截止条件）</div>
+      <div class="card-streak hot">🔥 1天</div>
+    </div>
+    <div class="card-why">知道何时算"做完"，避免无休止打磨。今天业务面 5/5 全部完成。</div>
+    <div class="card-bottom">
+      <div class="card-meta">
+        <span class="tag tag-planning">截止条件</span>
+      </div>
+      <div class="card-dates">首次 03/05</div>
+    </div>
+    <div class="strength-bar"><div class="strength-fill" style="width:20%"></div></div>
+  </div>
+
+  <!-- How to update -->
+  <div class="update-note">
+    <strong>HOW TO UPDATE · 明天如何更新</strong>
+    每次复盘后，找到用过的策略卡片，把 <code>streak</code> 天数 +1，<code>strength-fill</code> 的 width 加 20%（最多100%），dates 里加上新日期。有新策略就复制一张卡片加在底部。
+  </div>
+
+  <div class="footer">
+    <div class="footer-note">积累中 · BUILDING UP</div>
+    <div class="footer-note">STARTED 2026.03.05</div>
+  </div>
+
+</div>
+
+<script>
+  function filterCards(category, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.strategy-card').forEach(card => {
+      if (category === 'all' || card.dataset.category === category) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
